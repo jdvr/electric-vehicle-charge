@@ -15,7 +15,7 @@ import io.ktor.server.routing.*
 fun main() {
 
 
-    embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
+    embeddedServer(Netty, port = getPort()) {
         configureDbUsingExposed()
         configureSerialization()
         configureHTTP()
@@ -23,4 +23,9 @@ fun main() {
             chargesRouting(ChargesService(PostgresChargeStorage(application.log)))
         }
     }.start(wait = true)
+}
+
+
+fun getPort(): Int {
+    return System.getenv("PORT")?.toInt() ?: 8080
 }
