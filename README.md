@@ -5,7 +5,7 @@ A simple tracker for Electric Vehicle Charges.
 
 - Start date
 - Duration
-- Amount changed (kw)
+- Amount changed (wh)
 - Price (total or by kw)
 
 ## Run it

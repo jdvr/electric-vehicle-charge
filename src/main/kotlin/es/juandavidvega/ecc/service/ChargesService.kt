@@ -17,7 +17,7 @@ class ChargesService(private val chargeStorage: ChargeStorage) {
                 newCharge.generateId(),
                 newCharge.epoch,
                 newCharge.durationInSeconds,
-                newCharge.kw,
+                newCharge.wh,
                 newCharge.finalPrice()
             )
         )
@@ -37,7 +37,14 @@ class ChargesService(private val chargeStorage: ChargeStorage) {
 }
 
 fun NewCharge.generateId(): String {
-    return "$epoch-$kw"
+    return "$epoch-$wh"
 }
 
-fun NewCharge.finalPrice(): Int = priceInCent ?: (avgPriceInCent!! * kw)
+fun NewCharge.finalPrice(): Int {
+    if (priceInCent != null) {
+        return priceInCent
+    }
+
+    val whPrice = avgPriceInCent!! / 1000.toDouble()
+    return (wh * whPrice).toInt()
+}

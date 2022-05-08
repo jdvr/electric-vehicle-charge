@@ -22,7 +22,7 @@ class PostgresChargeStorage(private val log: Logger) : ChargeStorage {
             ChargeEntity.insert {
                 it[chargeId] = r.id
                 it[startedAt] = r.startedAt
-                it[kw] = r.kw
+                it[kw] = r.wh
                 it[duration] = r.duration
                 it[priceInCent] = r.priceInCent
             }
