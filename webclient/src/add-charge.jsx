@@ -6,10 +6,11 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import TimerIcon from "@mui/icons-material/Timer";
 import EuroIcon from "@mui/icons-material/Euro";
 import MenuItem from "@mui/material/MenuItem";
-import { Button } from "@mui/material";
+import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
-import { getUnixTime } from "date-fns";
+import getUnixTime from "date-fns/getUnixTime";
 import { DatePicker } from "@mui/x-date-pickers";
+import Alert from "@mui/material/Alert";
 
 const EPOCH_FIELD = "epoch";
 const WH_FIELD = "wh";
@@ -17,10 +18,10 @@ const DURATION_FIELD = "durationInSeconds";
 const PRICE_FIELD = "priceInCent";
 const AVG_PRICE_FIELD = "avgPriceInCent";
 
-const mandatoryFields = [WH_FIELD, DURATION_FIELD];
+const mandatoryFields = [WH_FIELD, DURATION_FIELD, EPOCH_FIELD];
 const atLeastOneOf = [AVG_PRICE_FIELD, PRICE_FIELD];
 
-export default function AddCharge() {
+export default function AddCharge({ apiClient }) {
   const [isAvgPrice, setIsAvgPrice] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState(null);
   const [newCharge, setNewCharge] = React.useState({});
@@ -46,23 +47,16 @@ export default function AddCharge() {
       setErrorMessage(validationError);
       return;
     }
-
-    fetch("http://localhost:8080/charge", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...newCharge,
-        [EPOCH_FIELD]: getUnixTime(newCharge[EPOCH_FIELD]),
-      }),
-    }).catch(console.error);
+    apiClient.create({
+      ...newCharge,
+      [EPOCH_FIELD]: getUnixTime(newCharge[EPOCH_FIELD]),
+    });
     navigate("/");
   };
 
   return (
     <Box sx={{ "& > :not(style)": { m: 2 } }}>
+      {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
       <Box sx={{ display: "flex", alignItems: "flex-end" }}>
         <CalendarMonthIcon sx={{ color: "action.active", mr: 1, my: 0.5 }} />
         <DatePicker

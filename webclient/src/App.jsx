@@ -20,6 +20,9 @@ import { Box } from "@mui/material";
 import { Routes, Route, useNavigate } from "react-router-dom";
 
 import AddCharge from "./add-charge";
+import { createAPIClient, getAPIBaseURL } from "./api";
+
+const apiBaseURL = getAPIBaseURL(window.location.href);
 
 const monthFormatter = new Intl.DateTimeFormat(navigator.language, {
   month: "long",
@@ -64,31 +67,9 @@ function calculateChargesByMonth(charges) {
 function App() {
   const navigate = useNavigate();
 
-  const [charges, setCharges] = useState(null);
+  console.log(apiBaseURL);
 
-  useEffect(() => {
-    if (charges !== null) {
-      return;
-    }
-    fetch("http://localhost:8080/charge")
-      .then((r) => r.json())
-      .then((charges) => {
-        setCharges(charges);
-      })
-      .catch((e) => {
-        console.error(e);
-        setCharges([]);
-      });
-  }, [charges]);
-
-  const handleDelete = (chargeId) => {
-    fetch(`http://localhost:8080/charge/${chargeId}`, {
-      method: "DELETE",
-    }).catch(console.error);
-    setCharges(charges.filter((c) => c.id !== chargeId));
-  };
-
-  const chargesByMonth = calculateChargesByMonth(charges);
+  const apiClient = createAPIClient(apiBaseURL);
   return (
     <>
       <AppBar position="static">
@@ -126,19 +107,46 @@ function App() {
         </Toolbar>
       </AppBar>
       <Routes>
-        <Route
-          path="/"
-          element={
-            <Charges
-              chargesByMonth={chargesByMonth}
-              loading={charges === null}
-              onDelete={(chargeId) => handleDelete(chargeId)}
-            />
-          }
-        />
-        <Route path="new" element={<AddCharge />} />
+        <Route path="/" element={<ChargesContainer apiClient={apiClient} />} />
+        <Route path="new" element={<AddCharge apiClient={apiClient} />} />
       </Routes>
     </>
+  );
+}
+
+function ChargesContainer({ apiClient }) {
+  const navigate = useNavigate();
+
+  const [charges, setCharges] = useState(null);
+
+  useEffect(() => {
+    if (charges !== null) {
+      return;
+    }
+    apiClient
+      .getCharges()
+      .then((charges) => {
+        setCharges(charges);
+      })
+      .catch((e) => {
+        console.error(e);
+        setCharges([]);
+      });
+  }, [charges]);
+
+  const handleDelete = (chargeId) => {
+    apiClient.delete(chargeId);
+    setCharges(charges.filter((c) => c.id !== chargeId));
+  };
+
+  const chargesByMonth = calculateChargesByMonth(charges);
+
+  return (
+    <Charges
+      chargesByMonth={chargesByMonth}
+      loading={charges === null}
+      onDelete={(chargeId) => handleDelete(chargeId)}
+    />
   );
 }
 

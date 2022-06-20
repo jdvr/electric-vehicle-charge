@@ -3,6 +3,7 @@ package es.juandavidvega.ecc
 import es.juandavidvega.ecc.plugins.configureDbUsingExposed
 import es.juandavidvega.ecc.plugins.configureHTTP
 import es.juandavidvega.ecc.plugins.configureSerialization
+import es.juandavidvega.ecc.plugins.configureStaticFiles
 import es.juandavidvega.ecc.routes.chargesRouting
 import es.juandavidvega.ecc.service.ChargesService
 import es.juandavidvega.ecc.storage.PostgresChargeStorage
@@ -19,6 +20,7 @@ fun main() {
         configureDbUsingExposed()
         configureSerialization()
         configureHTTP()
+        configureStaticFiles()
         routing {
             chargesRouting(ChargesService(PostgresChargeStorage(application.log)))
         }
