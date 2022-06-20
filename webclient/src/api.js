@@ -15,7 +15,7 @@ export function createAPIClient(url) {
       }).catch(console.error);
     },
     create(newCharge) {
-      fetch("http://localhost:8080/charge", {
+      fetch(`${url}/charge`, {
         method: "POST",
         headers: {
           Accept: "application/json",

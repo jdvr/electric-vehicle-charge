@@ -21,6 +21,11 @@ cd webclient
 yarn dev
 ```
 
+## Build
+
+To generate a new version of webclient, you need to run `yarn buil` which generate static content for `static` folder.
+
+
 ## Expose API
 
 - Create
