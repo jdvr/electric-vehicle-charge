@@ -33,6 +33,8 @@ class ChargesService(private val chargeStorage: ChargeStorage) {
 
     fun findAll(): Set<Charge> {
         return chargeStorage.readAll()
+            .sortedByDescending { it.startedAt }
+            .toSet()
     }
 }
 

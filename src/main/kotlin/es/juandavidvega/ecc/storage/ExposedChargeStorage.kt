@@ -45,7 +45,6 @@ class PostgresChargeStorage(private val log: Logger) : ChargeStorage {
                 )
             }.toSet()
         }
-
     }
 
     override fun update(r: Charge): OperationResult {

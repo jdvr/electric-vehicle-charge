@@ -15,6 +15,12 @@ A simple tracker for Electric Vehicle Charges.
 ```
 You can use defined DB of [docker-compose.yaml] by running `docker-compose up`. Sample connection string on [.env.dist]
 
+You can run web client using `vite`:
+```shell
+cd webclient
+yarn dev
+```
+
 ## Expose API
 
 - Create
