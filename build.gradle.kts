@@ -40,6 +40,8 @@ dependencies {
     implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-freemarker:$ktor_version")
 
+    implementation("io.github.cdimascio:dotenv-kotlin:6.3.1")
+
     implementation("org.postgresql:postgresql:42.3.4")
     implementation ("com.zaxxer:HikariCP:5.0.1")
     implementation("org.jetbrains.exposed", "exposed-core", exposed_version)

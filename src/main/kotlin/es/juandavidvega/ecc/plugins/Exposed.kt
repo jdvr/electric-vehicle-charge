@@ -8,12 +8,7 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import kotlin.system.exitProcess
 
-fun Application.configureDbUsingExposed() {
-    val envJdbcUrl = System.getenv("JDBC_DATABASE_URL")
-    if (envJdbcUrl.isNullOrBlank()) {
-        exposedLogger.error("Invalid database url: $envJdbcUrl")
-        exitProcess(0)
-    }
+fun Application.configureDbUsingExposed(envJdbcUrl: String) {
     val datasourceConfig = HikariConfig().apply {
         driverClassName = "org.postgresql.Driver"
         jdbcUrl = envJdbcUrl
