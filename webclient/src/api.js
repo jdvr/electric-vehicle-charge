@@ -7,6 +7,9 @@ export function createAPIClient(url) {
     getCharges() {
       return fetch(`${url}charge`).then((r) => r.json());
     },
+    reportBreakdown() {
+      return fetch(`${url}report/breakdown`).then((r) => r.json());
+    },
     delete(chargeId) {
       fetch(`${url}charge/${chargeId}`, {
         method: "DELETE",
