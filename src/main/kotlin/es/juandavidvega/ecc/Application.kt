@@ -5,7 +5,9 @@ import es.juandavidvega.ecc.plugins.configureHTTP
 import es.juandavidvega.ecc.plugins.configureSerialization
 import es.juandavidvega.ecc.plugins.configureStaticFiles
 import es.juandavidvega.ecc.routes.chargesRouting
+import es.juandavidvega.ecc.routes.reportRouting
 import es.juandavidvega.ecc.service.ChargesService
+import es.juandavidvega.ecc.service.ReportService
 import es.juandavidvega.ecc.storage.PostgresChargeStorage
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -22,7 +24,10 @@ fun main() {
         configureHTTP()
         configureStaticFiles()
         routing {
-            chargesRouting(ChargesService(PostgresChargeStorage(application.log)))
+            val chargeStorage = PostgresChargeStorage(application.log)
+
+            chargesRouting(ChargesService(chargeStorage))
+            reportRouting(ReportService(chargeStorage))
         }
     }.start(wait = true)
 }

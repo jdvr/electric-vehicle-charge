@@ -1,6 +1,10 @@
 package es.juandavidvega.ecc.dto
 
+import io.ktor.server.util.*
+import io.ktor.util.date.*
 import kotlinx.serialization.Serializable
+import java.text.SimpleDateFormat
+import java.time.Instant
 
 typealias Seconds = Int
 
@@ -11,7 +15,12 @@ data class Charge(
     val duration: Seconds,
     val wh: Int,
     val priceInCent: Int
-)
+) {
+    fun monthOfTheYear(): String{
+        val formatter = SimpleDateFormat("MM/YYYY")
+        return formatter.format(Instant.ofEpochSecond(startedAt).toGMTDate().toJvmDate())
+    }
+}
 
 @Serializable
 data class NewCharge(

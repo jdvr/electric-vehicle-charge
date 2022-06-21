@@ -2,6 +2,7 @@ val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
 val exposed_version: String by project
+val junit_version: String by project
 
 plugins {
     application
@@ -20,6 +21,10 @@ application {
 
 tasks {
     create("stage").dependsOn("installDist")
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 repositories {
@@ -44,5 +49,9 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
 
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+    testImplementation("org.junit.jupiter:junit-jupiter:$junit_version")
+    testImplementation("org.junit.jupiter:junit-jupiter-params:$junit_version")
+    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.25")
+    testImplementation("io.mockk:mockk:1.12.4")
+
 }
