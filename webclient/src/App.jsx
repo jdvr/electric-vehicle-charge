@@ -21,8 +21,14 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 
 import AddCharge from "./add-charge";
 import { createAPIClient, getAPIBaseURL } from "./api";
+import { Menu } from "./menu";
+import { ReportByMonth } from "./report";
 
-const apiBaseURL = getAPIBaseURL(window.location.href);
+const searchParams = new URLSearchParams(window.location.search);
+
+const overrideApiBaseURL = searchParams.get("_apiUrl");
+
+const apiBaseURL = overrideApiBaseURL ?? getAPIBaseURL(window.location.href);
 
 const monthFormatter = new Intl.DateTimeFormat(navigator.language, {
   month: "long",
@@ -69,9 +75,13 @@ function App() {
 
   console.log(apiBaseURL);
 
+  const [menuOpen, setMenuOpen] = useState(false);
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+
   const apiClient = createAPIClient(apiBaseURL);
   return (
     <>
+      <Menu open={menuOpen} onChange={toggleMenu} />
       <AppBar position="static">
         <Toolbar>
           <IconButton
@@ -80,6 +90,7 @@ function App() {
             color="inherit"
             aria-label="menu"
             sx={{ mr: 2 }}
+            onClick={toggleMenu}
           >
             <MenuIcon />
           </IconButton>
@@ -109,14 +120,16 @@ function App() {
       <Routes>
         <Route path="/" element={<ChargesContainer apiClient={apiClient} />} />
         <Route path="new" element={<AddCharge apiClient={apiClient} />} />
+        <Route
+          path="by-month"
+          element={<ReportByMonth apiClient={apiClient} />}
+        />
       </Routes>
     </>
   );
 }
 
 function ChargesContainer({ apiClient }) {
-  const navigate = useNavigate();
-
   const [charges, setCharges] = useState(null);
 
   useEffect(() => {

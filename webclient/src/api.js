@@ -1,5 +1,3 @@
-import { getUnixTime } from "date-fns";
-
 export function getAPIBaseURL(currentLocation) {
   return currentLocation.replace("3000", "8080").split("#")[0];
 }
