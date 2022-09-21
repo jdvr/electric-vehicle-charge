@@ -7,7 +7,7 @@ import es.juandavidvega.ecc.plugins.configureStaticFiles
 import es.juandavidvega.ecc.routes.chargesRouting
 import es.juandavidvega.ecc.routes.reportRouting
 import es.juandavidvega.ecc.service.ChargesService
-import es.juandavidvega.ecc.service.ReportService
+import es.juandavidvega.ecc.service.PeriodsBreakdownService
 import es.juandavidvega.ecc.storage.PostgresChargeStorage
 import io.github.cdimascio.dotenv.Dotenv
 import io.github.cdimascio.dotenv.dotenv
@@ -40,7 +40,7 @@ fun main() {
             val chargeStorage = PostgresChargeStorage(application.log)
 
             chargesRouting(ChargesService(chargeStorage))
-            reportRouting(ReportService(chargeStorage))
+            reportRouting(PeriodsBreakdownService(chargeStorage))
         }
     }.start(wait = true)
 }

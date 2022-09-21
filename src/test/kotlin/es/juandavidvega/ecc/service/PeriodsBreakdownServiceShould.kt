@@ -32,9 +32,9 @@ internal class PeriodsBreakdownServiceShould {
 
         every { chargeStorageMock.readAll() } returns charges.toSet()
 
-        val reportService = ReportService(chargeStorageMock)
+        val periodsBreakdownService = PeriodsBreakdownService(chargeStorageMock)
 
-        val periodsBreakdown = reportService.periodsBreakdown(PeriodQuery(
+        val periodsBreakdown = periodsBreakdownService.periodsBreakdown(PeriodQuery(
             resolution = PeriodQuery.Resolution.Month
         ))
 
@@ -52,9 +52,9 @@ internal class PeriodsBreakdownServiceShould {
 
         every { chargeStorageMock.readAll() } returns emptySet()
 
-        val reportService = ReportService(chargeStorageMock)
+        val periodsBreakdownService = PeriodsBreakdownService(chargeStorageMock)
 
-        val periodsBreakdown = reportService.periodsBreakdown(PeriodQuery(
+        val periodsBreakdown = periodsBreakdownService.periodsBreakdown(PeriodQuery(
             resolution = PeriodQuery.Resolution.Month
         ))
 

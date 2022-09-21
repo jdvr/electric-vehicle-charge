@@ -11,7 +11,7 @@ data class PeriodQuery(val resolution: Resolution) {
     }
 }
 
-class ReportService(private val chargeStorage: ChargeStorage) {
+class PeriodsBreakdownService(private val chargeStorage: ChargeStorage) {
     fun periodsBreakdown(periodQuery: PeriodQuery): PeriodsBreakdown {
         val charges = chargeStorage.readAll()
         val periods = charges

@@ -38,3 +38,8 @@ To generate a new version of webclient, you need to run `yarn buil` which genera
     ```
     ```
   
+## TODO
+- Account
+- Car: Motor, Batery, Avg, consumption.
+- Home/no-home charge
+- Estimations: Number of full charges, % of battery charged
