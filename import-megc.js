@@ -1,15 +1,7 @@
 const fs = require('fs')
-//const fetch = require('fetch')
 
 const minsTextRegexp = /([0-9]+)\smins/
 const kwhTextRegexp = /([0-9]+)\.([0-9]+)\skwh/i
-
-alreadyParsed = [
-    newCharge(1663027200, 27660, 21650, 217),
-    newCharge(1662940800, 5400, 16710, 167),
-    newCharge(1661212800, 4560, 25640, 474),
-    newCharge(1660780800, 6180, 33320, 393),
-]
 
 function newCharge(epoch, wh, priceInCent, durationInSeconds) {
     return {
@@ -89,6 +81,16 @@ function sendNewCharge(charge) {
 }
 
 const charges = readLines("exported-megc.csv")
-alreadyParsed.forEach(c => {
+
+const cs = [
+    newCharge(1663401268, 27634, 608, 31248),
+    newCharge(1659858868, 8978, 198, 11340),
+    newCharge(1657007668, 12475, 274, 14145),
+    newCharge(1656662068, 12891,284, 15346),
+    newCharge(1655884468, 20394, 20.394 * 0.22, 42172)
+
+]
+
+cs.forEach(c => {
     sendNewCharge(c)
 })

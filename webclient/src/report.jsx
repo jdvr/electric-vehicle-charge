@@ -160,7 +160,6 @@ function ReportAvgPriceByMonthChart({ periods }) {
   }, {});
 
   const labels = Object.keys(periodsByLabel);
-  console.log(periodsByLabel, periods);
   const data = {
     labels,
     datasets: [

@@ -181,7 +181,7 @@ function Charges({ chargesByMonth, loading, onDelete }) {
       {Object.entries(chargesByMonth).map(([month, charges]) => (
         <li key={`section-${month}`}>
           <ul>
-            <ListSubheader>{month}</ListSubheader>
+            <ListSubheader>{`${month} (${charges.length})`}</ListSubheader>
             {charges.map((charge) => (
               <ListItem key={`item-${month}-${charge.id}`}>
                 <Charge
