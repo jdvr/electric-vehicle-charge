@@ -15,7 +15,8 @@ fun Application.configureHTTP() {
         allowMethod(HttpMethod.Patch)
         allowHost("localhost:8080",  schemes = listOf("http", "https"))
         allowHost("localhost:3000", schemes = listOf("http", "https"))
-        allowHost("my-ecc-tracker.herokuapp.com", listOf("http", "https"))
+        allowHost("*.juandavidvega.es", listOf("http", "https"))
+        allowHost("juandavidvega.es", listOf("http", "https"))
         allowHeader(HttpHeaders.ContentType)
     }
 
