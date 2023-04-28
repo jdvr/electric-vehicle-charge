@@ -4,6 +4,7 @@ import es.juandavidvega.ecc.dto.Charge
 import es.juandavidvega.ecc.service.OperationResult
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.Logger
 
@@ -53,7 +54,9 @@ class PostgresChargeStorage(private val log: Logger) : ChargeStorage {
 
     override fun delete(id: String): OperationResult = try {
         transaction {
-            ChargeEntity.deleteWhere { ChargeEntity.chargeId eq id }
+            ChargeEntity.deleteWhere {
+                this.chargeId.eq(id)
+            }
         }
         OperationResult.Success
     } catch (e: java.lang.Exception) {

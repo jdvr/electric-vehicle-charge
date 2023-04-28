@@ -8,6 +8,7 @@ import es.juandavidvega.ecc.routes.chargesRouting
 import es.juandavidvega.ecc.routes.reportRouting
 import es.juandavidvega.ecc.service.ChargesService
 import es.juandavidvega.ecc.service.PeriodsBreakdownService
+import es.juandavidvega.ecc.storage.InMemoryChargeStorage
 import es.juandavidvega.ecc.storage.PostgresChargeStorage
 import io.github.cdimascio.dotenv.Dotenv
 import io.github.cdimascio.dotenv.dotenv
@@ -20,29 +21,44 @@ import kotlin.system.exitProcess
 
 
 private const val ENV_VAR_JDBC_DATABASE_URL_NAME = "JDBC_DATABASE_URL"
+private const val ENV_VAR_STATELESS = "STATELESS"
 private const val ENV_VAR_PORT_NAME = "PORT"
 
 fun main() {
+    embeddedServer(
+        Netty,
+        port = getPort(),
+        module = Application::myApplicationModule
+    ).start(wait = true)
+}
 
+fun Application.myApplicationModule() {
     val config = EnvConfig()
+    val stateless = config.loadOrDefault(ENV_VAR_STATELESS, false)
 
     val envJdbcUrl = config.loadOrDefault(ENV_VAR_JDBC_DATABASE_URL_NAME, "")
-    if (envJdbcUrl.isEmpty()) {
+    if (envJdbcUrl.isEmpty() && !stateless) {
         println("Empty database url: $envJdbcUrl")
         exitProcess(0)
     }
-    embeddedServer(Netty, port = getPort()) {
-        configureDbUsingExposed(envJdbcUrl)
-        configureSerialization()
-        configureHTTP()
-        configureStaticFiles()
-        routing {
-            val chargeStorage = PostgresChargeStorage(application.log)
 
-            chargesRouting(ChargesService(chargeStorage))
-            reportRouting(PeriodsBreakdownService(chargeStorage))
+    if (!stateless) {
+        configureDbUsingExposed(envJdbcUrl)
+    }
+
+    configureSerialization()
+    configureHTTP()
+    configureStaticFiles()
+    routing {
+        val chargeStorage = if (stateless) {
+            PostgresChargeStorage(application.log)
+        } else {
+            InMemoryChargeStorage()
         }
-    }.start(wait = true)
+
+        chargesRouting(ChargesService(chargeStorage))
+        reportRouting(PeriodsBreakdownService(chargeStorage))
+    }
 }
 
 fun getPort(): Int {
@@ -64,8 +80,9 @@ class EnvConfig {
         return Optional.of(value)
     }
 
-    fun loadOrDefault(key: String, defaultValue: String): String {
-        return load(key).orElse(defaultValue)
-    }
+    inline fun <reified T> loadOrDefault(key: String, defaultValue: T): T =
+        load(key).map { it as T }.orElse(defaultValue)
+
+
 
 }
