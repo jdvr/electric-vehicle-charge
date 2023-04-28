@@ -1,4 +1,12 @@
+FROM eclipse-temurin:11 as builder
+
+WORKDIR /code
+COPY . /code
+RUN ./gradlew build
+
 FROM eclipse-temurin:11
+
 RUN mkdir /opt/app
-COPY build/libs/ecc-api-fat.jar /opt/app
-CMD ["java", "-jar", "/opt/app/ecc-api-fat.jar.jar"]
+COPY --from=builder /code/build/libs/ecc-api-fat.jar /opt/app
+EXPOSE 8080
+CMD ["java", "-jar", "/opt/app/ecc-api-fat.jar"]
