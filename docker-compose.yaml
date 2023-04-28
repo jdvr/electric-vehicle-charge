@@ -8,3 +8,10 @@ services:
       POSTGRES_USER: username
       POSTGRES_PASSWORD: password
       POSTGRES_DB: localdb
+  ecc:
+    build:
+      context: .
+    env_file:
+      - .env
+    depends_on:
+      - database
