@@ -26,7 +26,7 @@ resource "scaleway_container" "ecc_container" {
   name           = "ecc-container"
   description    = "Container to run the app"
   namespace_id   = scaleway_container_namespace.main.id
-  registry_image = "TODO"
+  registry_image = "juanvegadev/evc-api:1-temurin-11"
   port           = 8080
   min_scale      = 1
   max_scale      = 1
