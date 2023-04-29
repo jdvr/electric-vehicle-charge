@@ -32,9 +32,10 @@ resource "scaleway_container" "ecc_container" {
   max_scale      = 1
   privacy        = "private"
   deploy         = true
-  # memory_limit   = 128
+  memory_limit   = 128
   environment_variables = {
     "STATELESS" = "true"
+    "TEST" = "2"
   }
 
   timeouts {
