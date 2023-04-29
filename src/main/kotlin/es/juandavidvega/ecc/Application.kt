@@ -17,8 +17,6 @@ import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.routing.*
 import java.util.*
-import kotlin.system.exitProcess
-
 
 private const val ENV_VAR_JDBC_DATABASE_URL_NAME = "JDBC_DATABASE_URL"
 private const val ENV_VAR_STATELESS = "STATELESS"
@@ -37,12 +35,7 @@ fun Application.myApplicationModule() {
     val stateless = config.loadOrDefault(ENV_VAR_STATELESS, false)
 
     val envJdbcUrl = config.loadOrDefault(ENV_VAR_JDBC_DATABASE_URL_NAME, "")
-    if (envJdbcUrl.isEmpty() && !stateless) {
-        println("Empty database url: $envJdbcUrl")
-        exitProcess(0)
-    }
-
-    if (!stateless) {
+    if (envJdbcUrl.isNotEmpty()) {
         configureDbUsingExposed(envJdbcUrl)
     }
 
@@ -50,10 +43,10 @@ fun Application.myApplicationModule() {
     configureHTTP()
     configureStaticFiles()
     routing {
-        val chargeStorage = if (stateless) {
-            PostgresChargeStorage(application.log)
+        val chargeStorage = if (stateless || envJdbcUrl.isEmpty()) {
+            InMemoryChargeStorage(application.log)
         } else {
-            InMemoryChargeStorage()
+            PostgresChargeStorage(application.log)
         }
 
         chargesRouting(ChargesService(chargeStorage))

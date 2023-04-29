@@ -2,10 +2,16 @@ package es.juandavidvega.ecc.storage
 
 import es.juandavidvega.ecc.dto.Charge
 import es.juandavidvega.ecc.service.OperationResult
+import io.ktor.util.logging.*
 import java.util.concurrent.ConcurrentHashMap
 
-class InMemoryChargeStorage : ChargeStorage {
+class InMemoryChargeStorage(log: Logger) : ChargeStorage {
+    init {
+        log.debug("Using InMemory storage, all data will be lost after a restart")
+    }
+
     private var charges: MutableMap<String, Charge> = ConcurrentHashMap()
+
     override fun create(r: Charge): OperationResult {
         charges[r.id] = r
         return OperationResult.Success
