@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     scaleway = {
-      source = "scaleway/scaleway"
+      source  = "scaleway/scaleway"
       version = ">= 2.8.0"
     }
   }
@@ -9,29 +9,30 @@ terraform {
 }
 
 provider "scaleway" {
-  zone   = "fr-par-1"
-  region = "fr-par"
+  zone       = "fr-par-1"
+  region     = "fr-par"
   access_key = var.scw_access_key
   secret_key = var.scw_secret_key
 }
 
 
 resource "scaleway_container_namespace" "main" {
-  project_id  = var.scw_project_id
-  region      = "fr-par"
-  name        = "ecc-namespace"
+  project_id = var.scw_project_id
+  region     = "fr-par"
+  name       = "ecc-namespace"
 }
 
 resource "scaleway_container" "ecc_container" {
   name           = "ecc-container"
   description    = "Container to run the app"
   namespace_id   = scaleway_container_namespace.main.id
-  registry_image = "juanvegadev/evc-api:1-temurin-11"
+  registry_image = "juanvegadev/evc-api:2-temurin-11"
   port           = 8080
   min_scale      = 1
   max_scale      = 1
   privacy        = "private"
   deploy         = true
+  # memory_limit   = 128
   environment_variables = {
     "STATELESS" = "true"
   }

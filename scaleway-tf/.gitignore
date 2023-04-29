@@ -1,5 +1,5 @@
 # Ignore tfvars bc it includes AWS credentials
-terraform.tfvars
+*.tfvars
 
 # Local .terraform directories
 **/.terraform/*
