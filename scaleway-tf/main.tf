@@ -32,6 +32,9 @@ resource "scaleway_container" "ecc_container" {
   max_scale      = 1
   privacy        = "private"
   deploy         = true
+  environment_variables = {
+    "STATELESS" = "true"
+  }
 
   timeouts {
     create = "15m"
